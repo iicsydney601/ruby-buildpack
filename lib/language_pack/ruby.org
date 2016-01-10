@@ -19,32 +19,6 @@ class LanguagePack::Ruby < LanguagePack::Base
   DEFAULT_RUBY_VERSION = "ruby-2.2.3"
   RBX_BASE_URL         = "https://binaries.rubini.us/heroku"
   NODE_BP_PATH         = "vendor/node/bin"
-  DB2_DSDRIVER_URL     = "https://public.dhe.ibm.com/ibmdl/export/pub/software/data/db2/drivers/odbc_cli/linuxx64_odbc_cli.tar.gz"
-  DB2_DSDRIVER_FILE    = "clidriver.tgz"
-  DB2_DSDRIVER_STAGING_LOC = "/tmp/staged/app/vendor/bundle"
-  DB2_DSDRIVER_RUNTIME_LOC = "$HOME/vendor/bundle/clidriver/lib"
-
-  DB2_DSDRIVER_URL     = "https://dl.dropboxusercontent.com/u/92217296/db2_client"
-  DB2_DSDRIVER_FILE    = "v9.7fp9a_linuxx64_rtcl.tar.gz"
-  DB2_DSDRIVER_STAGING_LOC = "/tmp/staged/app"
-  DB2_DSDRIVER_RUNTIME_LOC = "$HOME"   #$HOME = /app at runtime 
-  
-  DROPBOX_CLIENT_URL     = "https://dl.dropboxusercontent.com/u/92217296/dropbox"
-  DROPBOX_CLIENT_FILE    = "dropbox-lnx.x86_64-2.10.28.tar.gz"
-  DROPBOX_CLIENT_STAGING_LOC = "/tmp/staged/app"
-  DROPBOX_CLIENT_RUNTIME_LOC = "$HOME"
-
-  DROPBOX_API_URL     = "https://dl.dropboxusercontent.com/u/92217296/Dropbox-api"
-  DROPBOX_API_FILE    = "local.tar.gz"
-  DROPBOX_API_STAGING_LOC = "/tmp/staged/app"
-  DROPBOX_API_RUNTIME_LOC = "$HOME"
-
-  TMATE_URL     = "https://dl.dropboxusercontent.com/u/92217296/tmate"
-  TMATE_FILE    = "tmate.tar"
-  TMATE_STAGING_LOC = "/tmp/staged/app"
-  TMATE_RUNTIME_LOC = "$HOME"
-  
-  
 
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -873,57 +847,6 @@ params = CGI.parse(uri.query || "")
         @bundler_cache.load
       end
 
-	  
-	  
-	  
-    # install db2 ODBC if required
-	
-    if File.exist?("#{DB2_DSDRIVER_STAGING_LOC}/v9.7fp9a_linuxx64_rtcl.tar.gz")
-	    # nothing to do, there is one from cache
-	  else
-	    puts "Downloading and untarring DB2 v9.7fp9a runtime client...."
-	    if fetch_package_and_untar(DB2_DSDRIVER_FILE, DB2_DSDRIVER_URL)
-          puts "IBM DB2 v9.7fp9a runtime client downloaded successfully"
-        else
-           error "Failed to download DB2 v9.7fp9a runtime client . Check if #{DB2_DSDRIVER_URL} is available "
-	    end
-	end
-	
-    if File.exist?("#{DROPBOX_CLIENT_STAGING_LOC}/dropbox-lnx.x86_64-2.10.28.tar.gz")
-	     # nothing to do, there is one from cache
-	else
-	    puts "Downloading Dropbox Linux Client ...."
-	    if fetch_package_and_untar(DROPBOX_CLIENT_FILE, DROPBOX_CLIENT_URL)
-         puts "Dropbox Linux client downloaded successfully"
-        else
-         error "Failed to download Dropbox Linux client. Check if #{DROPBOX_CLIENT_URL} is available "
-	    end
-	end
-	
-    if File.exist?("#{DROPBOX_API_STAGING_LOC}/local.tar")
-	     # nothing to do, there is one from cache
-	else
-	    puts "Downloading Dropbox api Client ...."
-	    if fetch_package_and_untar(DROPBOX_API_FILE, DROPBOX_API_URL)
-         puts "Dropbox API client downloaded successfully"
-        else
-         error "Failed to download Dropbox API client. Check if #{DROPBOX_API_URL} is available "
-	    end
-	end
-	
-  
-    if File.exist?("#{TMATE_STAGING_LOC}/tmate.tar")
-	     # nothing to do, there is one from cache
-	else
-	    puts "Downloading Tmate server ...."
-	    if fetch_package_and_untar(TMATE_FILE, TMATE_URL)
-         puts "Tmate server downloaded successfully"
-        else
-         error "Failed to download Tmate server. Check if #{TMATE_URL} is available "
-	    end
-	end
-    
-	  
       # fix bug from v37 deploy
       if File.exists?("vendor/ruby_version")
         puts "Broken cache detected. Purging build cache."
