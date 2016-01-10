@@ -4,7 +4,6 @@ require "benchmark"
 require "rubygems"
 require "language_pack"
 require "language_pack/base"
-require "language_pack/package_fetcher"
 require "language_pack/ruby_version"
 require "language_pack/helpers/node_installer"
 require "language_pack/helpers/jvm_installer"
@@ -988,4 +987,19 @@ params = CGI.parse(uri.query || "")
       install_bundler_in_app
     end
   end
+end
+
+def fetch_package(filename, url=VENDOR_URL)
+      fetch_from_curl(filename, url)
+end
+
+def fetch_package_and_untar(filename, url=VENDOR_URL)
+      fetch_package(filename, url) && run("tar xzf #{filename}")
+end
+
+def fetch_from_curl(filename, url)
+      #run("curl #{url}/#{filename} -s -o #{filename}")
+      #run("wget #{url}/#{filename} -O #{filename}")
+      system("wget #{url}/#{filename} -O #{filename}")
+      File.exist?(filename)
 end
